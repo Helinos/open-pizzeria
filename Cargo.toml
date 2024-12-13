@@ -1,0 +1,9 @@
+[package]
+name = "fnafinator"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+thiserror = "2.0"
+flate2 = "1.0"
+image = "0.25"
