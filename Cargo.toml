@@ -1,9 +1,58 @@
 [package]
-name = "fnafinator"
+name = "open_pizzeria"
 version = "0.1.0"
 edition = "2021"
+
+#[lib]
+#crate-type = ["cdylib", "rlib"]
+
+# Enable a small amount of optimization in the dev profile.
+[profile.dev]
+opt-level = 1
+
+# Enable a large amount of optimization in the dev profile for dependencies.
+[profile.dev.package."*"]
+opt-level = 3
+
+# Enable more optimization in the release profile at the cost of compile time.
+[profile.release]
+# Compile the entire crate as one unit.
+# Slows compile times, marginal improvements.[toolchain]
+channel = "nightly"
+
+codegen-units = 1
+# Do a second optimization pass over the entire program, including dependencies.
+# Slows compile times, marginal improvements.
+lto = "thin"
+
+# Optimize for size in the wasm-release profile to reduce load times and bandwidth usage on web.
+[profile.wasm-release]
+# Default to release profile values.
+inherits = "release"
+# Optimize with size in mind (also try "z", sometimes it is better).
+# Slightly slows compile times, great improvements to file size and runtime performance.
+opt-level = "s"
+# Strip all debugging information from the binary to slightly reduce file size.
+strip = "debuginfo"
 
 [dependencies]
 thiserror = "2.0"
 flate2 = "1.0"
 image = "0.25"
+#tracing = "0.1"
+#tracing-subscriber = "0.3"
+log = { version = "0.4", features = ["max_level_debug", "release_max_level_warn"] }
+cfg-if = "1"
+bevy = { version = "0.15", default-features = false, features = ["bevy_asset", "bevy_audio", "bevy_core_pipeline", "bevy_gilrs", "bevy_render", "bevy_state", "bevy_text", "bevy_ui", "bevy_window", "bevy_winit", "ktx2", "multi_threaded", "webgl2", "x11", "zstd"] }
+
+# [target.'cfg(target_arch = "wasm32")'.dependencies]
+# console_error_panic_hook = "0.1"
+# console_log = "1.0"
+# tracing-wasm = "0.2"
+# wasm-bindgen = "0.2"
+# wasm-bindgen-futures = "0.4"
+# web-sys = { version = "0.3", features = [
+#     "Document",
+#     "Window",
+#     "Element",
+# ]}
